@@ -58,7 +58,7 @@ const exeistingItem = cart.find(item => item.nome === nome)
         cart.push({
             nome, 
             price,
-            quantity: 1,
+            quantity: 1
         });
 
     }
@@ -91,6 +91,8 @@ function updateCartModal(){
     </div>
       ` 
         total += item.price * item.quantity;
+        
+        
 
       cartItemsContainer.appendChild(cartItemElement)
     
@@ -177,17 +179,18 @@ checkoutBtn.addEventListener("click", function(){
     }
 
 // enviar para API do whats
-    const cartItems = cart.map((item)=>{
-        return(
-            ` ${item.nome} Quantidade: (${item.quantity}) Preço: R$${item.price} |`
-        )
-    }).join("")
-    
-    const message = encodeURIComponent(cartItems)
-    const phone ="+5522992330986"
+   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    window.open(`https://wa.me/${phone}?text=${message} Endereço: ${addressInput.value}`, "_blank")
+    const cartItems = cart.map((item) => {
+    return(
+        `${item.nome} Quantidade:(${item.quantity}) Preço: R$${item.price.toFixed(2)} |` 
+    )
+}).join("")
 
+const message = encodeURIComponent(`${cartItems} \n\nTOTAL DO PEDIDO: R$${total.toFixed(2)} \nEndereço: ${addressInput.value}`);
+const phone = "+5522992330986"
+
+window.open(`https://wa.me/${phone}?text=${message}`, "_blank")
     cart =[];
     updateCartModal();
 })
